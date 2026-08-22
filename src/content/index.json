@@ -1,0 +1,61 @@
+{
+  "title": "信息科技数字教材",
+  "subtitle": "小学·初中·高中 一体化数字教材",
+  "version": "0.2.0",
+  "stages": [
+    {
+      "id": "primary",
+      "title": "小学",
+      "units": [
+        {
+          "id": "p-u1",
+          "title": "四年级·编码的奥秘",
+          "lessons": [
+            { "id": "p-code-1", "title": "第1课 生活中的编码", "file": "primary/grade4-coding1.json" },
+            { "id": "p-code-2", "title": "第2课 编码的规则与应用", "file": "primary/grade4-coding2.json" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "junior",
+      "title": "初中",
+      "units": [
+        {
+          "id": "j-u1",
+          "title": "六年级·过程与控制",
+          "lessons": [
+            { "id": "j-control-1", "title": "第5课 从连续量到开关量", "file": "junior/grade6-control.json" }
+          ]
+        },
+        {
+          "id": "j-u2",
+          "title": "七年级·互联网",
+          "lessons": [
+            { "id": "j-internet-1", "title": "第1课 认识互联网", "file": "junior/grade7-internet.json" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "senior",
+      "title": "高中",
+      "units": [
+        {
+          "id": "s-u1",
+          "title": "高一上·Python程序设计",
+          "lessons": [
+            { "id": "s-python-loop", "title": "第6课 循环结构", "file": "senior/grade10-python-loop.json" }
+          ]
+        },
+        {
+          "id": "s-u2",
+          "title": "高一下·人工智能",
+          "lessons": [
+            { "id": "s-ai-1", "title": "第1课 认识人工智能", "file": "senior/grade10-ai.json" }
+          ]
+        }
+      ]
+    }
+  ]
+}

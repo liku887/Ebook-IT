@@ -1,0 +1,237 @@
+{
+  "id": "j-internet-1",
+  "unit": "七年级·互联网",
+  "title": "第1课 认识互联网",
+  "project": "探秘互联网的工作过程",
+  "duration": "1课时",
+  "objectives": [
+    "了解互联网的基本组成，能说出网络中的主要设备及其作用",
+    "理解IP地址和域名的含义，知道域名解析的过程",
+    "认识网络安全的重要性，养成文明上网的习惯"
+  ],
+  "sections": {
+    "intro": {
+      "title": "导入",
+      "content": [
+        {
+          "type": "text",
+          "value": "早上用手机查看天气，白天在学校用平板查资料，晚上回家用电脑看视频——我们的生活已经离不开互联网。那么，当你在浏览器输入一个网址并按下回车，到网页显示出来，这短短一秒钟内发生了什么？"
+        },
+        {
+          "type": "tip",
+          "kind": "think",
+          "value": "你家里有哪些设备连接了互联网？它们是通过什么连接的——网线、Wi-Fi还是其他方式？"
+        }
+      ]
+    },
+    "tasks": [
+      {
+        "title": "学习任务1 互联网的组成",
+        "content": [
+          {
+            "type": "text",
+            "value": "互联网（Internet）是由全世界数以亿计的计算机、手机、服务器等设备通过网线、光纤、无线电波等连接在一起的巨大网络。它的核心是「网络的网络」——无数小网络互联而成。"
+          },
+          {
+            "type": "mindmap",
+            "code": "flowchart TD\n    A[互联网组成] --> B[终端设备]\n    A --> C[网络设备]\n    A --> D[传输介质]\n    A --> E[服务器]\n    B --> B1[电脑/手机/平板]\n    B --> B2[智能家电]\n    C --> C1[路由器]\n    C --> C2[交换机]\n    D --> D1[光纤/网线]\n    D --> D2[无线电波/Wi-Fi]\n    E --> E1[网页服务器]\n    E --> E2[DNS服务器]"
+          },
+          {
+            "type": "interactive",
+            "component": "ChoiceExercise",
+            "data": {
+              "question": "家里能让多台设备同时上网的设备通常是？",
+              "options": [
+                "交换机",
+                "路由器",
+                "服务器",
+                "防火墙"
+              ],
+              "answer": 1,
+              "explanation": "路由器负责将家庭网络连接到互联网，并让多台设备共享上网。"
+            }
+          },
+          {
+            "type": "knowledge",
+            "title": "互联网的组成",
+            "content": [
+              {
+                "type": "text",
+                "value": "互联网（Internet）是由全球数以亿计的计算机、手机、服务器等设备通过路由器、光纤、无线基站等网络设备相互连接而成的巨大网络。"
+              },
+              {
+                "type": "mindmap",
+                "code": "mindmap\n  root((互联网))\n    终端设备\n      计算机\n      手机\n      服务器\n    网络设备\n      路由器\n      交换机\n      基站\n    传输介质\n      光纤\n      网线\n      无线电波\n    协议\n      TCP/IP\n      HTTP"
+              },
+              {
+                "type": "tip",
+                "kind": "info",
+                "value": "互联网的核心是「网际互联」——无数个小网络通过统一的协议（TCP/IP）连接在一起。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "学习任务2 IP地址与域名",
+        "content": [
+          {
+            "type": "text",
+            "value": "互联网上每台设备都有一个唯一的地址，叫做IP地址，如 192.168.1.1。但数字地址难以记忆，人们就用有意义的文字来代替，这就是域名，如 www.baidu.com。"
+          },
+          {
+            "type": "text",
+            "value": "当你在浏览器输入域名时，DNS（域名系统）服务器会将域名「翻译」成对应的IP地址，然后浏览器才能找到目标服务器。这个过程叫做域名解析。"
+          },
+          {
+            "type": "mindmap",
+            "code": "sequenceDiagram\n    participant U as 浏览器\n    participant D as DNS服务器\n    participant S as 网页服务器\n    U->>D: 查询 www.example.com 的IP\n    D->>U: 返回 93.184.216.34\n    U->>S: 向该IP请求网页\n    S->>U: 返回网页内容"
+          },
+          {
+            "type": "interactive",
+            "component": "FillExercise",
+            "data": {
+              "question": "互联网上设备的唯一地址叫______，便于记忆的文字地址叫______，负责「翻译」的服务器叫______。",
+              "answers": [
+                "IP地址",
+                "域名",
+                "DNS服务器"
+              ],
+              "explanation": "IP地址是数字标识，域名是助记符，DNS服务器负责域名到IP的解析。"
+            }
+          },
+          {
+            "type": "knowledge",
+            "title": "IP地址与域名",
+            "content": [
+              {
+                "type": "text",
+                "value": "IP地址：互联网上每台设备的唯一标识，如 192.168.1.1。IPv4由4组0-255的数字组成，IPv6采用更长的地址格式。"
+              },
+              {
+                "type": "text",
+                "value": "域名：IP地址的助记符，如 www.baidu.com。DNS（域名系统）负责将域名解析为IP地址。"
+              },
+              {
+                "type": "text",
+                "value": "数据包传输：信息在互联网中被分割成小的数据包，沿不同路径到达目的地后重新组装。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "学习任务3 网络安全与文明上网",
+        "content": [
+          {
+            "type": "text",
+            "value": "互联网在带来便利的同时也存在风险：病毒、钓鱼网站、个人信息泄露等。我们要学会保护自己，安全、文明地使用网络。"
+          },
+          {
+            "type": "tip",
+            "kind": "warn",
+            "value": "不要点击来历不明的链接，不要在不可信的网站输入个人信息和密码，及时更新系统和软件。"
+          },
+          {
+            "type": "interactive",
+            "component": "ChoiceExercise",
+            "data": {
+              "question": "收到一条短信「您的快递有异常，请点击链接填写银行卡信息领取赔偿」，正确做法是？",
+              "options": [
+                "立即点击链接填写信息",
+                "转发给同学",
+                "不点击，通过官方渠道核实",
+                "回复短信质问"
+              ],
+              "answer": 2,
+              "explanation": "这是典型的钓鱼短信，不应点击链接，应通过官方App或电话核实。"
+            }
+          },
+          {
+            "type": "link",
+            "title": "拓展：互联网的发展历程",
+            "url": "https://www.cnnic.net.cn/",
+            "desc": "中国互联网络信息中心（CNNIC），了解中国互联网发展统计数据。"
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "title": "总结",
+      "content": [
+        {
+          "type": "text",
+          "value": "本节课我们了解了互联网的组成（终端设备、网络设备、传输介质、服务器），理解了IP地址、域名和DNS解析的工作过程，还学习了网络安全防护知识。"
+        },
+        {
+          "type": "mindmap",
+          "code": "flowchart LR\n    A[认识互联网] --> B[组成]\n    A --> C[地址]\n    A --> D[安全]\n    B --> B1[终端/路由器/服务器]\n    C --> C1[IP地址]\n    C --> C2[域名]\n    C --> C3[DNS解析]\n    D --> D1[防钓鱼]\n    D --> D2[保护隐私]\n    D --> D3[文明上网]"
+        },
+        {
+          "type": "interactive",
+          "component": "FillExercise",
+          "data": {
+            "question": "浏览器输入域名后，首先由______服务器将域名解析为______，然后才能访问网页服务器。",
+            "answers": [
+              "DNS",
+              "IP地址"
+            ],
+            "explanation": "DNS服务器负责将域名翻译为IP地址，浏览器再根据IP地址访问目标服务器。"
+          }
+        }
+      ]
+    }
+  },
+  "knowledge": {
+    "sections": [],
+    "resources": [
+      {
+        "type": "link",
+        "title": "互联网地图（Submarine Cable Map）",
+        "src": "https://www.submarinecablemap.com/",
+        "desc": "查看全球海底光缆分布"
+      },
+      {
+        "type": "video",
+        "title": "互联网是如何工作的",
+        "src": "",
+        "desc": "动画微课：数据包从你的电脑到服务器的旅程"
+      }
+    ]
+  },
+  "studentTasks": {
+    "preclass": {
+      "title": "课前任务",
+      "content": [
+        {
+          "type": "text",
+          "value": "在家中观察路由器的指示灯，数一数有多少设备连接了家里的Wi-Fi。"
+        }
+      ]
+    },
+    "postclass": {
+      "title": "课后任务",
+      "content": [
+        {
+          "type": "text",
+          "value": "用 traceroute 或类似工具跟踪访问一个网站的路径，记录数据包经过了多少跳。"
+        },
+        {
+          "type": "interactive",
+          "component": "ChoiceExercise",
+          "data": {
+            "question": "DNS的作用是什么？",
+            "options": [
+              "传输数据",
+              "将域名解析为IP地址",
+              "加密通信",
+              "存储网页"
+            ],
+            "answer": 1,
+            "explanation": "DNS（域名系统）负责将人类易记的域名转换为计算机使用的IP地址。"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,290 @@
+{
+  "id": "s-python-loop",
+  "unit": "高一上·Python程序设计",
+  "title": "第6课 循环结构",
+  "project": "用循环解决重复计算问题",
+  "duration": "1课时",
+  "objectives": [
+    "掌握 for 循环和 while 循环的语法格式与执行流程",
+    "能根据问题特点选择合适的循环结构",
+    "理解 break 和 continue 的作用，能编写含循环的简单程序",
+    "体会循环结构在简化重复操作中的价值"
+  ],
+  "sections": {
+    "intro": {
+      "title": "导入",
+      "content": [
+        {
+          "type": "text",
+          "value": "如果要计算 1+2+3+…+100 的和，你会怎么做？写100次加法显然太繁琐。在程序中，我们可以用循环结构让计算机重复执行相同的操作，几行代码就能解决。"
+        },
+        {
+          "type": "tip",
+          "kind": "think",
+          "value": "生活中有哪些「重复做同一件事」的例子？循环和这些重复行为有什么相似之处？"
+        }
+      ]
+    },
+    "tasks": [
+      {
+        "title": "学习任务1 for 循环——计数循环",
+        "content": [
+          {
+            "type": "text",
+            "value": "for 循环用于已知重复次数的场景，常配合 range() 函数使用。range(n) 生成 0 到 n-1 的整数序列。"
+          },
+          {
+            "type": "text",
+            "value": "示例：计算 1+2+…+100 的和\n\ntotal = 0\nfor i in range(1, 101):\n    total += i\nprint(total)  # 输出 5050"
+          },
+          {
+            "type": "interactive",
+            "component": "ChoiceExercise",
+            "data": {
+              "question": "for i in range(1, 5): 循环体执行几次？",
+              "options": [
+                "3次",
+                "4次",
+                "5次",
+                "6次"
+              ],
+              "answer": 1,
+              "explanation": "range(1,5) 生成 1,2,3,4，共4个数，循环执行4次。range 是左闭右开区间。"
+            }
+          },
+          {
+            "type": "interactive",
+            "component": "FillExercise",
+            "data": {
+              "question": "range(1, 101) 生成从______到______的整数，共______个数。",
+              "answers": [
+                "1",
+                "100",
+                "100"
+              ],
+              "explanation": "range 左闭右开，range(1,101) 包含1到100，共100个数。"
+            }
+          },
+          {
+            "type": "knowledge",
+            "title": "循环结构概述",
+            "content": [
+              {
+                "type": "text",
+                "value": "循环结构让程序重复执行某段代码，是程序设计中最基本的三种控制结构（顺序、选择、循环）之一。Python提供 for 循环和 while 循环两种方式。"
+              },
+              {
+                "type": "mindmap",
+                "code": "flowchart TD\n    A[循环结构] --> B[for 循环]\n    A --> C[while 循环]\n    B --> B1[已知次数]\n    B --> B2[遍历序列]\n    C --> C1[条件满足时重复]\n    C --> C2[需注意避免死循环]\n    A --> D[循环控制]\n    D --> D1[break 跳出]\n    D --> D2[continue 跳过本次]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "学习任务2 while 循环——条件循环",
+        "content": [
+          {
+            "type": "text",
+            "value": "while 循环在条件为真时反复执行循环体，适合重复次数不确定的场景。注意要在循环体内修改条件变量，否则会变成死循环。"
+          },
+          {
+            "type": "text",
+            "value": "示例：计算 1+2+…+100（while 版本）\n\ntotal = 0\ni = 1\nwhile i <= 100:\n    total += i\n    i += 1\nprint(total)  # 输出 5050"
+          },
+          {
+            "type": "tip",
+            "kind": "warn",
+            "value": "while 循环必须有让条件趋于假的语句（如 i += 1），否则程序将永远无法停止（死循环）。"
+          },
+          {
+            "type": "interactive",
+            "component": "ChoiceExercise",
+            "data": {
+              "question": "以下哪个 while 循环是死循环？",
+              "options": [
+                "i=0; while i<5: print(i); i+=1",
+                "i=10; while i>0: print(i); i-=1",
+                "i=0; while i<5: print(i)",
+                "i=5; while i>0: i-=1; print(i)"
+              ],
+              "answer": 2,
+              "explanation": "第三个循环中 i 始终为0，条件 i<5 永远为真，且没有修改 i 的语句，是死循环。"
+            }
+          },
+          {
+            "type": "knowledge",
+            "title": "for 循环",
+            "content": [
+              {
+                "type": "text",
+                "value": "for 循环用于遍历序列（列表、字符串、range等）中的每个元素，语法：for 变量 in 序列:"
+              },
+              {
+                "type": "text",
+                "value": "range(start, stop, step) 生成整数序列：range(5) 生成 0-4；range(1,10,2) 生成 1,3,5,7,9。"
+              },
+              {
+                "type": "tip",
+                "kind": "warn",
+                "value": "range 的结束值不包含在序列中，即「左闭右开」。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "学习任务3 break 与 continue",
+        "content": [
+          {
+            "type": "text",
+            "value": "break 用于立即跳出整个循环；continue 用于跳过本次循环剩余语句，直接进入下一次循环。"
+          },
+          {
+            "type": "text",
+            "value": "示例：找出第一个大于50的斐波那契数\n\na, b = 1, 1\nwhile True:\n    if b > 50:\n        print(b)  # 输出 55\n        break\n    a, b = b, a + b"
+          },
+          {
+            "type": "interactive",
+            "component": "FillExercise",
+            "data": {
+              "question": "______语句用于立即跳出整个循环，______语句用于跳过本次循环剩余部分。",
+              "answers": [
+                "break",
+                "continue"
+              ],
+              "explanation": "break 终止整个循环，continue 只跳过当前这一次迭代。"
+            }
+          },
+          {
+            "type": "link",
+            "title": "拓展：Python 循环进阶技巧",
+            "url": "https://docs.python.org/zh-cn/3/tutorial/controlflow.html#for-statements",
+            "desc": "Python 官方教程中 for 语句与循环的更多用法。"
+          },
+          {
+            "type": "knowledge",
+            "title": "while 循环",
+            "content": [
+              {
+                "type": "text",
+                "value": "while 循环在条件为 True 时重复执行代码块，适合循环次数不确定的场景。语法：while 条件:"
+              },
+              {
+                "type": "text",
+                "value": "必须在循环体内修改条件变量，否则会造成死循环。break 可立即跳出循环，continue 跳过本次迭代进入下一次。"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "title": "总结",
+      "content": [
+        {
+          "type": "text",
+          "value": "循环结构是程序设计三大基本结构之一。for 循环适用于已知次数的重复，while 循环适用于条件控制的重复。break 跳出整个循环，continue 跳过本次迭代。合理使用循环可以大幅简化代码。"
+        },
+        {
+          "type": "mindmap",
+          "code": "flowchart TD\n    A[循环结构] --> B[for循环]\n    A --> C[while循环]\n    A --> D[控制语句]\n    B --> B1[已知次数]\n    B --> B2[配合range]\n    C --> C1[条件为真时执行]\n    C --> C2[注意避免死循环]\n    D --> D1[break 跳出循环]\n    D --> D2[continue 跳过本次]"
+        },
+        {
+          "type": "interactive",
+          "component": "ChoiceExercise",
+          "data": {
+            "question": "已知要重复执行100次，优先使用哪种循环？",
+            "options": [
+              "for 循环",
+              "while 循环",
+              "if 语句",
+              "都可以，没有区别"
+            ],
+            "answer": 0,
+            "explanation": "已知循环次数时，for 循环配合 range 更简洁直观。"
+          }
+        }
+      ]
+    }
+  },
+  "knowledge": {
+    "sections": [],
+    "resources": [
+      {
+        "type": "link",
+        "title": "Python官方教程：循环",
+        "src": "https://docs.python.org/zh-cn/3/tutorial/controlflow.html#for-statements",
+        "desc": "Python官方文档中的循环语句详解"
+      },
+      {
+        "type": "doc",
+        "title": "循环结构 课堂练习",
+        "src": "#",
+        "desc": "含累加求和、猜数字等编程练习题"
+      },
+      {
+        "type": "link",
+        "title": "Python Tutor 可视化执行",
+        "src": "https://pythontutor.com/",
+        "desc": "逐行可视化执行Python代码，观察循环过程"
+      },
+      {
+        "type": "code",
+        "title": "for 循环求 1+2+...+100",
+        "language": "python",
+        "content": "total = 0\nfor i in range(1, 101):\n    total += i\nprint(\"1到100的和为：\", total)\n# 输出：1到100的和为： 5050"
+      },
+      {
+        "type": "code",
+        "title": "while 循环猜数字",
+        "language": "python",
+        "content": "import random\nanswer = random.randint(1, 100)\nwhile True:\n    guess = int(input(\"猜一个1-100的数：\"))\n    if guess == answer:\n        print(\"猜对了！\")\n        break\n    elif guess < answer:\n        print(\"小了\")\n    else:\n        print(\"大了\")"
+      },
+      {
+        "type": "snippet",
+        "title": "Dijkstra 论循环",
+        "content": "计算机科学并不只是关于机器，正如天文学并不只是关于望远镜。",
+        "source": "Edsger W. Dijkstra"
+      }
+    ]
+  },
+  "studentTasks": {
+    "preclass": {
+      "title": "课前任务",
+      "content": [
+        {
+          "type": "text",
+          "value": "回忆生活中哪些事情是重复做的（如每天刷牙、跑操踏步），思考如果让计算机重复执行任务需要怎样描述。"
+        }
+      ]
+    },
+    "postclass": {
+      "title": "课后任务",
+      "content": [
+        {
+          "type": "text",
+          "value": "编写程序：用 for 循环输出九九乘法表的前5行。"
+        },
+        {
+          "type": "code",
+          "title": "参考框架",
+          "language": "python",
+          "content": "for i in range(1, 6):\n    for j in range(1, i + 1):\n        print(f\"{j}x{i}={i*j}\", end=\"\\t\")\n    print()"
+        },
+        {
+          "type": "interactive",
+          "component": "FillExercise",
+          "data": {
+            "question": "Python中，____循环适合已知次数的遍历，____循环适合条件满足时重复执行。",
+            "answers": [
+              "for",
+              "while"
+            ],
+            "explanation": "for循环用于遍历序列或已知次数，while循环根据条件判断是否继续。"
+          }
+        }
+      ]
+    }
+  }
+}
