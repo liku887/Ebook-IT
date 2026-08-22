@@ -1,9 +1,12 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { isAiReady } from '../composables/useAi'
+import AiGenerateModal from './AiGenerateModal.vue'
 
 const props = defineProps({
   block: { type: Object, required: true },
-  index: { type: Number, required: true }
+  index: { type: Number, required: true },
+  context: { type: String, default: '' }
 })
 const emit = defineEmits(['remove', 'moveUp', 'moveDown', 'change'])
 
@@ -25,7 +28,6 @@ function moveInnerBlock(i, dir) {
   props.block.content[j] = tmp
   emitChange()
 }
-// 内部块变更时通知父级（通过触发自定义事件，父级监听 @change）
 function emitChange() {
   emit('change')
 }
@@ -102,6 +104,31 @@ const dataJson = computed({
     }
   }
 })
+
+// ===== AI 生成 =====
+const aiModal = ref({ show: false, mode: 'text' })
+
+function openAi(mode) {
+  aiModal.value = { show: true, mode }
+}
+
+function onAiApply(result) {
+  if (aiModal.value.mode === 'text') {
+    props.block.value = result
+  } else if (aiModal.value.mode === 'code') {
+    props.block.content = result
+  } else if (aiModal.value.mode === 'choice' || aiModal.value.mode === 'fill') {
+    // 用生成的习题数据替换
+    if (result.question) props.block.data.question = result.question
+    if (result.options) {
+      props.block.data.options = result.options
+      props.block.data.answer = result.answer ?? 0
+    }
+    if (result.answers) props.block.data.answers = result.answers
+    if (result.explanation !== undefined) props.block.data.explanation = result.explanation
+  }
+  emitChange()
+}
 </script>
 
 <template>
@@ -123,9 +150,14 @@ const dataJson = computed({
     </div>
 
     <!-- 文本 -->
-    <div v-if="block.type === 'text'">
+    <div v-if="block.type === 'text'" class="relative">
       <textarea v-model="block.value" rows="3" placeholder="输入段落文本..."
-        class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white font-mono"></textarea>
+        class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white font-mono pr-10"></textarea>
+      <button v-if="isAiReady()" @click="openAi('text')"
+        class="absolute top-2 right-2 w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 shadow-sm"
+        title="AI 生成文本">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </button>
     </div>
 
     <!-- 图片 -->
@@ -168,8 +200,15 @@ const dataJson = computed({
 
       <!-- 选择题表单 -->
       <div v-if="block.component === 'ChoiceExercise'" class="space-y-2 pl-2 border-l-2 border-blue-200">
-        <input v-model="block.data.question" placeholder="题干"
-          class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white" />
+        <div class="relative">
+          <input v-model="block.data.question" placeholder="题干"
+            class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white pr-10" />
+          <button v-if="isAiReady()" @click="openAi('choice')"
+            class="absolute top-1/2 -translate-y-1/2 right-2 w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 shadow-sm"
+            title="AI 生成选择题">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </button>
+        </div>
         <div v-for="(opt, i) in block.data.options" :key="i" class="flex items-center gap-2">
           <input type="radio" :checked="block.data.answer === i" @change="block.data.answer = i" title="设为正确答案" />
           <input v-model="block.data.options[i]" :placeholder="'选项 ' + String.fromCharCode(65 + i)"
@@ -183,8 +222,15 @@ const dataJson = computed({
 
       <!-- 填空题表单 -->
       <div v-else-if="block.component === 'FillExercise'" class="space-y-2 pl-2 border-l-2 border-purple-200">
-        <textarea v-model="block.data.question" rows="2" placeholder="题干，用 ____ 表示空位"
-          class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white"></textarea>
+        <div class="relative">
+          <textarea v-model="block.data.question" rows="2" placeholder="题干，用 ____ 表示空位"
+            class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white pr-10"></textarea>
+          <button v-if="isAiReady()" @click="openAi('fill')"
+            class="absolute top-2 right-2 w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 shadow-sm"
+            title="AI 生成填空题">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </button>
+        </div>
         <div v-for="(ans, i) in block.data.answers" :key="i" class="flex items-center gap-2">
           <span class="text-xs text-slate-500 w-12">答案{{ i + 1 }}</span>
           <input v-model="block.data.answers[i]" placeholder="参考答案"
@@ -215,6 +261,7 @@ const dataJson = computed({
           :key="ii"
           :block="inner"
           :index="ii"
+          :context="context"
           @remove="removeInnerBlock(ii)"
           @move-up="moveInnerBlock(ii, -1)"
           @move-down="moveInnerBlock(ii, 1)"
@@ -243,8 +290,15 @@ const dataJson = computed({
           <option value="text">纯文本</option>
         </select>
       </div>
-      <textarea v-model="block.content" rows="6" placeholder="输入代码..."
-        class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-slate-900 text-green-400 font-mono"></textarea>
+      <div class="relative">
+        <textarea v-model="block.content" rows="6" placeholder="输入代码..."
+          class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-slate-900 text-green-400 font-mono pr-10"></textarea>
+        <button v-if="isAiReady()" @click="openAi('code')"
+          class="absolute top-2 right-2 w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 shadow-sm"
+          title="AI 生成代码">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </button>
+      </div>
     </div>
 
     <!-- 提示框 -->
@@ -253,8 +307,15 @@ const dataJson = computed({
         class="text-sm border border-slate-300 rounded px-2 py-1 bg-white">
         <option v-for="k in tipKinds" :key="k.value" :value="k.value">{{ k.label }}</option>
       </select>
-      <textarea v-model="block.value" rows="2" placeholder="提示内容（无需写想一想/提示等前缀，系统自动添加）"
-        class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white"></textarea>
+      <div class="relative">
+        <textarea v-model="block.value" rows="2" placeholder="提示内容（无需写想一想/提示等前缀，系统自动添加）"
+          class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white pr-10"></textarea>
+        <button v-if="isAiReady()" @click="openAi('text')"
+          class="absolute top-2 right-2 w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 shadow-sm"
+          title="AI 生成提示内容">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </button>
+      </div>
     </div>
 
     <!-- 拓展链接 -->
@@ -266,5 +327,14 @@ const dataJson = computed({
       <input v-model="block.desc" placeholder="链接描述（可选）"
         class="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white" />
     </div>
+
+    <!-- AI 生成弹窗 -->
+    <AiGenerateModal
+      :show="aiModal.show"
+      :mode="aiModal.mode"
+      :context="context"
+      @close="aiModal.show = false"
+      @apply="onAiApply"
+    />
   </div>
 </template>

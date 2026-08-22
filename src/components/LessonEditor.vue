@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import BlockEditor from './BlockEditor.vue'
+import AiGenerateModal from './AiGenerateModal.vue'
+import { isAiReady } from '../composables/useAi'
 import { getLessonById, saveLesson, resetLesson, exportLesson, hasLocalEdit, catalog, saveCatalog } from '../content'
 
 const props = defineProps({
@@ -57,6 +59,22 @@ function removeObjective(i) {
 function addBlock(sectionContent) {
   sectionContent.push({ type: 'text', value: '' })
   markDirty()
+}
+
+// AI 批量生成内容块
+const aiBatch = ref({ show: false, target: null, context: '' })
+function openAiBatch(target, sectionTitle) {
+  aiBatch.value = {
+    show: true,
+    target,
+    context: `课时《${draft.value.title}》- ${sectionTitle}`
+  }
+}
+async function onAiBatchApply(blocks) {
+  if (Array.isArray(blocks) && aiBatch.value.target) {
+    blocks.forEach((b) => aiBatch.value.target.push(b))
+    markDirty()
+  }
 }
 function removeBlock(sectionContent, i) {
   sectionContent.splice(i, 1)
@@ -305,16 +323,24 @@ const edited = computed(() => hasLocalEdit(props.lessonId))
             :key="i"
             :block="block"
             :index="i"
+            :context="`课时《${draft.title}》- ${draft.sections.intro.title}`"
             @remove="removeBlock(draft.sections.intro.content, i)"
             @move-up="moveBlock(draft.sections.intro.content, i, -1)"
             @move-down="moveBlock(draft.sections.intro.content, i, 1)"
           @change="markDirty"
           />
         </div>
-        <button @click="addBlock(draft.sections.intro.content)"
-          class="mt-2 w-full py-2 text-sm text-blue-600 border border-dashed border-blue-300 rounded hover:bg-blue-50">
-          + 添加内容块
-        </button>
+        <div class="mt-2 flex gap-2">
+          <button @click="addBlock(draft.sections.intro.content)"
+            class="flex-1 py-2 text-sm text-blue-600 border border-dashed border-blue-300 rounded hover:bg-blue-50">
+            + 添加内容块
+          </button>
+          <button v-if="isAiReady()" @click="openAiBatch(draft.sections.intro.content, draft.sections.intro.title)"
+            class="px-3 py-2 text-sm text-white bg-blue-600 border border-blue-600 rounded hover:bg-blue-700 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            AI 生成
+          </button>
+        </div>
       </section>
 
       <!-- 学习任务（可增删） -->
@@ -338,16 +364,24 @@ const edited = computed(() => hasLocalEdit(props.lessonId))
             :key="bi"
             :block="block"
             :index="bi"
+            :context="`课时《${draft.title}》- ${task.title}`"
             @remove="removeBlock(task.content, bi)"
             @move-up="moveBlock(task.content, bi, -1)"
             @move-down="moveBlock(task.content, bi, 1)"
           @change="markDirty"
           />
         </div>
-        <button @click="addBlock(task.content)"
-          class="mt-2 w-full py-2 text-sm text-blue-600 border border-dashed border-blue-300 rounded hover:bg-blue-50">
-          + 添加内容块
-        </button>
+        <div class="mt-2 flex gap-2">
+          <button @click="addBlock(task.content)"
+            class="flex-1 py-2 text-sm text-blue-600 border border-dashed border-blue-300 rounded hover:bg-blue-50">
+            + 添加内容块
+          </button>
+          <button v-if="isAiReady()" @click="openAiBatch(task.content, task.title)"
+            class="px-3 py-2 text-sm text-white bg-blue-600 border border-blue-600 rounded hover:bg-blue-700 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            AI 生成
+          </button>
+        </div>
       </section>
 
       <!-- 添加任务按钮 -->
@@ -369,16 +403,24 @@ const edited = computed(() => hasLocalEdit(props.lessonId))
             :key="i"
             :block="block"
             :index="i"
+            :context="`课时《${draft.title}》- ${draft.sections.summary.title}`"
             @remove="removeBlock(draft.sections.summary.content, i)"
             @move-up="moveBlock(draft.sections.summary.content, i, -1)"
             @move-down="moveBlock(draft.sections.summary.content, i, 1)"
           @change="markDirty"
           />
         </div>
-        <button @click="addBlock(draft.sections.summary.content)"
-          class="mt-2 w-full py-2 text-sm text-blue-600 border border-dashed border-blue-300 rounded hover:bg-blue-50">
-          + 添加内容块
-        </button>
+        <div class="mt-2 flex gap-2">
+          <button @click="addBlock(draft.sections.summary.content)"
+            class="flex-1 py-2 text-sm text-blue-600 border border-dashed border-blue-300 rounded hover:bg-blue-50">
+            + 添加内容块
+          </button>
+          <button v-if="isAiReady()" @click="openAiBatch(draft.sections.summary.content, draft.sections.summary.title)"
+            class="px-3 py-2 text-sm text-white bg-blue-600 border border-blue-600 rounded hover:bg-blue-700 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            AI 生成
+          </button>
+        </div>
       </section>
     </div>
 
@@ -473,16 +515,24 @@ const edited = computed(() => hasLocalEdit(props.lessonId))
             :key="'pre-' + i"
             :block="block"
             :index="i"
+            :context="`课时《${draft.title}》- ${draft.studentTasks.preclass.title}`"
             @remove="removeBlock(draft.studentTasks.preclass.content, i)"
             @move-up="moveBlock(draft.studentTasks.preclass.content, i, -1)"
             @move-down="moveBlock(draft.studentTasks.preclass.content, i, 1)"
             @change="markDirty"
           />
         </div>
-        <button @click="addBlock(draft.studentTasks.preclass.content)"
-          class="mt-2 w-full py-2 text-sm text-amber-600 border border-dashed border-amber-300 rounded hover:bg-amber-50">
-          + 添加内容块
-        </button>
+        <div class="mt-2 flex gap-2">
+          <button @click="addBlock(draft.studentTasks.preclass.content)"
+            class="flex-1 py-2 text-sm text-amber-600 border border-dashed border-amber-300 rounded hover:bg-amber-50">
+            + 添加内容块
+          </button>
+          <button v-if="isAiReady()" @click="openAiBatch(draft.studentTasks.preclass.content, draft.studentTasks.preclass.title)"
+            class="px-3 py-2 text-sm text-white bg-blue-600 border border-blue-600 rounded hover:bg-blue-700 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            AI 生成
+          </button>
+        </div>
       </section>
 
       <!-- 课后任务 -->
@@ -500,16 +550,24 @@ const edited = computed(() => hasLocalEdit(props.lessonId))
             :key="'post-' + i"
             :block="block"
             :index="i"
+            :context="`课时《${draft.title}》- ${draft.studentTasks.postclass.title}`"
             @remove="removeBlock(draft.studentTasks.postclass.content, i)"
             @move-up="moveBlock(draft.studentTasks.postclass.content, i, -1)"
             @move-down="moveBlock(draft.studentTasks.postclass.content, i, 1)"
             @change="markDirty"
           />
         </div>
-        <button @click="addBlock(draft.studentTasks.postclass.content)"
-          class="mt-2 w-full py-2 text-sm text-violet-600 border border-dashed border-violet-300 rounded hover:bg-violet-50">
-          + 添加内容块
-        </button>
+        <div class="mt-2 flex gap-2">
+          <button @click="addBlock(draft.studentTasks.postclass.content)"
+            class="flex-1 py-2 text-sm text-violet-600 border border-dashed border-violet-300 rounded hover:bg-violet-50">
+            + 添加内容块
+          </button>
+          <button v-if="isAiReady()" @click="openAiBatch(draft.studentTasks.postclass.content, draft.studentTasks.postclass.title)"
+            class="px-3 py-2 text-sm text-white bg-blue-600 border border-blue-600 rounded hover:bg-blue-700 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            AI 生成
+          </button>
+        </div>
       </section>
     </div>
 
@@ -532,5 +590,14 @@ const edited = computed(() => hasLocalEdit(props.lessonId))
         保存
       </button>
     </div>
+
+    <!-- AI 批量生成弹窗 -->
+    <AiGenerateModal
+      :show="aiBatch.show"
+      mode="blocks"
+      :context="aiBatch.context"
+      @close="aiBatch.show = false"
+      @apply="onAiBatchApply"
+    />
   </div>
 </template>

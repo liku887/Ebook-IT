@@ -8,9 +8,9 @@ import Sidebar from './components/Sidebar.vue'
     <Sidebar />
     <!-- 右侧主内容区 -->
     <main class="flex-1 overflow-y-auto">
-      <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" />
+      <router-view v-slot="{ Component, route }">
+        <transition name="fade">
+          <component :is="Component" :key="route.fullPath" />
         </transition>
       </router-view>
     </main>

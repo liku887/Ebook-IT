@@ -15,6 +15,12 @@ const activeTab = ref('process') // process | knowledge | tasks
 // 切换课时时重置 tab
 watch(() => route.params.id, () => { activeTab.value = 'process' })
 
+// 切换 Tab 时滚动到顶部
+watch(activeTab, () => {
+  const main = document.querySelector('main')
+  if (main) main.scrollTo({ top: 0, behavior: 'smooth' })
+})
+
 // 从 catalog 中查找当前课时的学段/单元显示名称
 const catalogInfo = computed(() => {
   if (!catalog.stages) return null

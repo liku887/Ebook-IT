@@ -38,4 +38,12 @@ function showErrorRecovery(err) {
   }
 }
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App)
+
+// Vue 组件错误捕获
+app.config.errorHandler = (err, instance, info) => {
+  console.error('Vue错误:', err, info)
+  showErrorRecovery(err)
+}
+
+app.use(router).mount('#app')

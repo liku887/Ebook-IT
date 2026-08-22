@@ -62,7 +62,7 @@ function onLessonCreated(id) {
     </div>
 
     <!-- 学段与课时列表 -->
-    <div v-for="stage in catalog.stages" :key="stage.id" class="mb-10">
+    <div v-for="stage in (catalog.stages || [])" :key="stage.id" class="mb-10">
       <div class="flex items-center gap-2 mb-4 pb-2 border-b border-slate-200">
         <span class="w-2.5 h-2.5 rounded-full" :class="stageColors[stage.id]?.dot || 'bg-slate-400'"></span>
         <h2 class="text-lg font-semibold text-slate-700">{{ stage.title }}</h2>
