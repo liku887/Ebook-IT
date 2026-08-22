@@ -14,6 +14,17 @@
 
 三个模块通过顶部 Tab 横向滑动切换，点击「编辑」按钮时自动定位到当前所在模块的编辑页。
 
+### 大模型 AI 辅助生成
+
+编辑模式下，配置大模型 API 后可使用 AI 辅助生成内容：
+
+- **API 配置**：侧边栏右下角蓝色灯泡按钮打开配置面板，支持 DeepSeek（默认）、OpenAI、智谱 GLM、Kimi、通义千问及任意 OpenAI 兼容接口；填写 API Key、接口地址、模型名称后可进行连通性测试
+- **单字段生成**：每个文本输入框（文本段落、提示框、代码块、选择题题干、填空题题干）右上角显示蓝色闪电 AI 按钮，点击弹出提示词弹窗，输入指令后 AI 生成内容直接填充到对应字段
+- **批量生成**：每个环节（导入/学习任务/总结/课前任务/课后任务）底部有「AI 生成」按钮，可一次性生成多个内容块（文本、提示、习题、知识卡片等），结果追加到当前环节末尾
+- **数据结构合规**：系统提示词内置完整内容块规范，AI 输出严格遵循系统数据结构（选择题含选项/答案/解析，填空题含空位/答案，内容块类型完整）
+- **生效条件**：仅编辑模式 + API 配置通过连通性测试后 AI 按钮才显示，未配置时完全隐藏不影响使用
+- 配置存储于 `localStorage`（key: `ebook-ai-config`）
+
 ### 网页内可视化编辑
 
 - **课时基本信息**：标题、项目名称、课时、学习目标
@@ -105,6 +116,8 @@ Ebook-IT/
     ├── App.vue                   # 布局（侧边栏 + 主内容区）
     ├── style.css
     ├── router/index.js           # hash 模式路由
+    ├── composables/
+    │   └── useAi.js              # ★ 大模型 API 配置、连通测试、内容生成
     ├── content/                  # ★ 课时内容与数据层
     │   ├── index.js              # 响应式 catalog、localStorage 持久化、CRUD
     │   ├── index.json            # 教材目录（学段→单元→课时）
@@ -122,6 +135,8 @@ Ebook-IT/
     │   ├── ResourcePlayer.vue    # 图片/视频播放器
     │   ├── MermaidDiagram.vue    # Mermaid 图表
     │   ├── AddLessonDialog.vue   # 添加课时对话框
+    │   ├── AiConfigPanel.vue     # ★ 大模型 API 配置面板
+    │   ├── AiGenerateModal.vue   # ★ AI 提示词输入与生成弹窗
     │   └── exercises/
     │       ├── ChoiceExercise.vue
     │       └── FillExercise.vue
@@ -195,6 +210,7 @@ Ebook-IT/
 
 - **课时内容**：`localStorage` key 为 `ebook-lesson-{id}`
 - **教材目录**：`localStorage` key 为 `ebook-catalog`
+- **AI 配置**：`localStorage` key 为 `ebook-ai-config`（API Key、接口地址、模型、连通测试状态）
 - 启动时自动校验目录数据结构，损坏数据自动清除并回退到原始版本
 - 全局错误捕获：页面崩溃时显示恢复面板，可一键清除本地数据并重新加载
 
@@ -205,4 +221,5 @@ Ebook-IT/
 - Vue Router 4（hash 模式，兼容 file:// 协议）
 - Tailwind CSS 3
 - Mermaid 10（流程图/思维导图）
-- 纯静态站点，无后端，无网络依赖
+- 大模型 API 集成（OpenAI 兼容接口，支持 DeepSeek/OpenAI/智谱/Kimi/通义千问等）
+- 纯静态站点，无后端，无网络依赖（AI 功能需联网调用大模型 API）
